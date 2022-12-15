@@ -1,0 +1,18 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "shell-piper"
+authors = [{ name = "Firegem", email = "mrfiregem@protonmail.ch" }]
+license = { file = "LICENSE" }
+classifiers = [
+  "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+]
+dynamic = ["version", "description"]
+
+[project.urls]
+Home = "https://github.com/Mrfiregem/shell-piper"
+
+[project.scripts]
+piper = "shell_piper:main"
