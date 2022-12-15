@@ -10,7 +10,6 @@ def get_editor_name() -> str:
         result = os.getenv("VISUAL")  # type: ignore[assignment]
     elif "EDITOR" in os.environ:
         result = os.getenv("EDITOR")  # type: ignore[assignment]
-
     return result
 
 
@@ -19,4 +18,4 @@ def get_editor(exe="") -> str:
     editor = which(exe if exe != "" else get_editor_name())
     if editor is not None:
         return editor
-    raise RuntimeError("Cannot find path to editor.")
+    raise RuntimeError

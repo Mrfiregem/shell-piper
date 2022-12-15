@@ -2,9 +2,13 @@
 import argparse
 import logging
 import sys
+
 from .exe import get_editor
 
 __version__ = "0.4.0"
+
+LOG_NAME = "shell_piper" if __name__ == "__main__" else __name__
+root_log = logging.Logger(LOG_NAME)
 
 
 def main():
@@ -37,3 +41,6 @@ def main():
     )
 
     cli_args = ap.parse_args()
+
+    if cli_args.verbose:
+        logging.basicConfig(level=logging.DEBUG)
