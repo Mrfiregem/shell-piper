@@ -1,9 +1,10 @@
 """Write a temporary file and pass it to a program"""
 import argparse
 import logging
+import subprocess
 import sys
 
-from .exe import get_editor
+from .file import close_tmpfile, create_tmpfile, open_file_in_editor
 
 __version__ = "0.4.0"
 
@@ -44,3 +45,12 @@ def main():
 
     if cli_args.verbose:
         logging.basicConfig(level=logging.DEBUG)
+
+    file_obj = create_tmpfile()
+    open_file_in_editor(file_obj)
+    try:
+        subprocess.run(["/usr/bin/cat", file_obj.name], check=True)
+    except ChildProcessError:
+        logging.error("Failed to run command")
+        sys.exit(2)
+    close_tmpfile(file_obj)
