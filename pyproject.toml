@@ -15,4 +15,4 @@ dynamic = ["version", "description"]
 Home = "https://github.com/Mrfiregem/shell-piper"
 
 [project.scripts]
-piper = "shell_piper:main"
+shellpiper = "shell_piper:main"
