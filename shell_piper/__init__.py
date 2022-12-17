@@ -5,6 +5,7 @@ import subprocess
 import sys
 
 from .file import close_tmpfile, create_tmpfile, open_file_in_editor
+from .exe import get_fullpath
 
 __version__ = "0.4.0"
 
@@ -13,7 +14,7 @@ root_log = logging.Logger(LOG_NAME)
 
 
 def main():
-    """Entance to cli script"""
+    """Entrance to cli script"""
     ap = argparse.ArgumentParser(  # pylint: disable=invalid-name
         prog="shell_piper",
         description=sys.modules[__name__].__doc__,
@@ -43,14 +44,27 @@ def main():
 
     cli_args = ap.parse_args()
 
+    # Show more output if '-V' was passed
     if cli_args.verbose:
         logging.basicConfig(level=logging.DEBUG)
 
+    # Create a temporary file and open it in user's editor
     file_obj = create_tmpfile()
+    logging.debug(f"Created temporary file: {file_obj.name}")
     open_file_in_editor(file_obj)
+
+    executable = get_fullpath(cli_args.program)
+    logging.debug(f"Found executable: {executable}")
+
+    # Run the given program on the temporary file
     try:
-        subprocess.run(["/usr/bin/cat", file_obj.name], check=True)
-    except ChildProcessError:
-        logging.error("Failed to run command")
+        subprocess.run([executable, file_obj.name], check=True)
+    except ChildProcessError as e:
+        logging.error(
+            f"Failed to run command: {cli_args.program} exited with exit code {e.returncode}"
+        )
         sys.exit(2)
+
+    # Delete the temporary file
+    logging.debug(f"Deleting temporary file: {file_obj.name}")
     close_tmpfile(file_obj)

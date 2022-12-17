@@ -5,7 +5,7 @@ import sys
 import tempfile
 from typing import IO, Union
 
-from .exe import get_editor
+from .exe import get_fullpath
 
 
 def create_tmpfile(suffix=".shell-piper.tmp") -> IO[bytes]:
@@ -25,7 +25,7 @@ def open_file_in_editor(file: IO[bytes]) -> None:
     """Write to temporary file with editor"""
     file.flush()
     try:
-        editor_path = get_editor()
+        editor_path = get_fullpath()
     except RuntimeError:
         logging.error("Cannot find path to editor")
         sys.exit(1)
