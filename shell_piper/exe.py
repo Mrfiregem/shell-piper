@@ -17,5 +17,5 @@ def get_fullpath(exe="") -> str:
     """Get the full path to the chosen editor"""
     prog = which(exe if exe != "" else get_editor_name())
     if prog is None:
-        raise FileNotFoundError("Cannot determine a text editor. Is $EDITOR set?")
+        raise FileNotFoundError(f"Cannot determine a full path for {exe}")
     return prog

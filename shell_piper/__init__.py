@@ -4,8 +4,13 @@ import logging
 import subprocess
 import sys
 
-from .file import close_tmpfile, create_tmpfile, open_file_in_editor
 from .exe import get_fullpath
+from .file import (
+    close_file_and_exit,
+    close_tmpfile,
+    create_tmpfile,
+    open_file_in_editor,
+)
 
 __version__ = "0.4.0"
 
@@ -50,7 +55,6 @@ def main():
 
     # Create a temporary file and open it in user's editor
     file_obj = create_tmpfile()
-    logging.debug(f"Created temporary file: {file_obj.name}")
     open_file_in_editor(file_obj)
 
     executable = get_fullpath(cli_args.program)
@@ -63,8 +67,7 @@ def main():
         logging.error(
             f"Failed to run command: {cli_args.program} exited with exit code {e.returncode}"
         )
-        sys.exit(2)
+        close_file_and_exit(file_obj, 2)
 
     # Delete the temporary file
-    logging.debug(f"Deleting temporary file: {file_obj.name}")
     close_tmpfile(file_obj)
