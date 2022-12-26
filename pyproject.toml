@@ -17,3 +17,6 @@ Issues = "https://github.com/Mrfiregem/shell-piper/issues"
 
 [project.scripts]
 shellpiper = "shell_piper:main"
+
+[project.optional-dependencies]
+dev = ["black>=22.12", "flit", "mypy>=0.991", "setuptools>=63.2"]

@@ -15,21 +15,21 @@ def create_tmpfile(suffix=".shell-piper.tmp") -> IO[bytes]:
     return tmpfile
 
 
-def close_tmpfile(tmpfile: Union[IO[bytes], IO[str]]) -> None:
+def close_tmpfile(tmpfile: Union[IO[bytes], IO[str]]):
     """Close tmpfile (and delete it)"""
     logging.debug(f"Deleting temporary file: {tmpfile.name}")
     try:
         tmpfile.close()
     except:
-        raise RuntimeWarning(f"Could not close {tmpfile.name}")
+        raise OSError(f"Could not close {tmpfile.name}")
 
 
-def open_file_in_editor(file: IO[bytes]) -> None:
+def open_file_in_editor(file: IO[bytes]):
     """Write to temporary file with editor"""
     file.flush()
     try:
         editor_path = get_fullpath()
-    except RuntimeError:
+    except FileNotFoundError:
         logging.error("Cannot find path to editor")
         sys.exit(1)
 
@@ -42,10 +42,11 @@ def open_file_in_editor(file: IO[bytes]) -> None:
         close_file_and_exit(file, exit_code)
 
 
-def close_file_and_exit(file: IO[bytes], exit_code=0) -> None:
+def close_file_and_exit(file: IO[bytes], exit_code=0):
+    """Wrapper to close a file or raise"""
     logging.debug("")
     try:
         close_tmpfile(file)
-    except RuntimeWarning:
+    except OSError:
         logging.warning(f"Unable to close {file.name}")
     sys.exit(exit_code)
