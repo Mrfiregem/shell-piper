@@ -6,6 +6,7 @@ build-backend = "flit_core.buildapi"
 name = "shell-piper"
 authors = [{ name = "Firegem", email = "mrfiregem@protonmail.ch" }]
 license = { file = "LICENSE" }
+readme = "README.md"
 classifiers = [
   "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
 ]

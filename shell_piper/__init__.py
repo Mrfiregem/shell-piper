@@ -5,7 +5,7 @@ import sys
 import subprocess
 from typing import IO
 
-from .exe import get_fullpath
+from .exe import get_fullpath, replace_tmpfile_references
 from .file import (
     close_file_and_exit,
     close_tmpfile,
@@ -13,7 +13,7 @@ from .file import (
     open_file_in_editor,
 )
 
-__version__ = "0.5.0"
+__version__ = "0.5.1"
 
 EPILOG = """\
 Use '--' to prevent command flags to the right of it being parsed by piper.
@@ -41,8 +41,12 @@ def stdin_mode(cmdline: list[str], file: IO[bytes]) -> int:
 
 
 def argument_mode(cmdline: list[str], file: IO[bytes]) -> int:
-    try:
+    if r"{piper:file}" in cmdline:
+        cmdline = replace_tmpfile_references(cmdline, file)
+    else:
         cmdline = cmdline + [file.name]
+
+    try:
         logging.debug(f"Starting command {cmdline}")
         proc = subprocess.run(cmdline)
     except subprocess.CalledProcessError as e:
@@ -74,7 +78,7 @@ def expand_mode(cmdline: list[str], file: IO[bytes], keep_empty: bool) -> int:
 def main():
     """Entrance to cli script"""
     ap = argparse.ArgumentParser(  # pylint: disable=invalid-name
-        prog="shell_piper",
+        prog="shellpiper",
         description=sys.modules[__name__].__doc__,
         epilog=EPILOG,
         formatter_class=argparse.RawDescriptionHelpFormatter,

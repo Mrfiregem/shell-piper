@@ -1,6 +1,7 @@
 """Handles working with the foreign executable"""
 import os
 from shutil import which
+from typing import IO
 
 
 def get_editor_name() -> str:
@@ -19,3 +20,7 @@ def get_fullpath(exe="") -> str:
     if prog is None:
         raise FileNotFoundError(f"Cannot determine a full path for {exe}")
     return prog
+
+
+def replace_tmpfile_references(cmdline: list[str], file: IO[bytes]) -> list[str]:
+    return [file.name if arg == r"{piper:file}" else arg for arg in cmdline]
