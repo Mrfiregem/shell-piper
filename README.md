@@ -39,7 +39,7 @@ shellpiper -t x youtube-dl
 ## Usage
 
 ```
-usage: shell_piper [-h] [-v] [-V] [-t TYPE] [-k] program [args ...]
+usage: shellpiper [-h] [-v] [-V] [-t TYPE] [-k] program [args ...]
 
 Write a temporary file and pass it to a program
 
@@ -59,5 +59,4 @@ Use '--' to prevent command flags to the right of it being parsed by piper.
 The '--type' flag can take values 'stdin' (default), 'argument', or 'expand',
 or the letters 's', 'a', or 'x', respectively.
 This determines how the file is passed to your program by shellpiper.
-
 ```
