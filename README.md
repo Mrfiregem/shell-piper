@@ -4,7 +4,7 @@ Shell-piper is a commandline program made to write to a temporary file with your
 
 ## Installation
 
-The recommended way to install shell-piper is through [pipx](https://github.com/pypa/pipx): `pipx install 'git+https://github.com/Mrfiregem/shell-piper.git'`
+The recommended way to install shell-piper is through [pipx](https://github.com/pypa/pipx): `pipx install shell-piper`
 
 You can also clone this repository and build shell-piper manually.
 
@@ -26,7 +26,7 @@ Convert pasted html into markdown with `pandoc`:
 shellpiper --type argument -- pandoc '{piper:file}' --from html -o converted.md
 ```
 
-The argument `{piper:file}` will be expanded by shellpiper to the full path of the temporary file. If this argument is not present, the file path will be appended as the last argument.
+The argument `{piper:file}` will be expanded by shell-piper to the full path of the temporary file. If this argument is not present, the file path will be appended as the last argument.
 
 ### Expand Mode
 
