@@ -9,7 +9,7 @@ from .exe import get_fullpath, replace_tmpfile_references
 from .file import (close_file_and_exit, close_tmpfile, create_tmpfile,
                    open_file_in_editor)
 
-__version__ = "0.5.1"
+__version__ = "0.6.0"
 
 EPILOG = """\
 Use '--' to prevent command flags to the right of it being parsed by piper.
@@ -128,8 +128,13 @@ def main():
     file_obj = create_tmpfile()
     open_file_in_editor(file_obj)
 
-    executable = get_fullpath(cli_args.program)
-    logging.debug(f"Found executable: {executable}")
+    try:
+        logging.debug("Attempting to find executable: %s", cli_args.program)
+        executable = get_fullpath(cli_args.program)
+    except FileNotFoundError:
+        logging.error("Cannot find full path for %s", cli_args.program)
+        close_file_and_exit(file_obj, 4)
+
     logging.debug("Found executable: %s", executable)
 
     logging.debug("Beginning mode check")
