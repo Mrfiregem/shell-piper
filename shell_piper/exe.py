@@ -23,4 +23,5 @@ def get_fullpath(exe="") -> str:
 
 
 def replace_tmpfile_references(cmdline: list[str], file: IO[bytes]) -> list[str]:
+    """Replace instances of '{piper:file}' in 'cmdline' with the path to 'file'"""
     return [file.name if arg == r"{piper:file}" else arg for arg in cmdline]
