@@ -1,12 +1,20 @@
 # shell-piper
 
-Shell-piper is a commandline program made to write to a temporary file with your editor and pass that file's contents to an external program through various methods.
+Shell-piper is a commandline program made to write to a temporary file with your
+editor and pass that file's contents to an external program through various methods.
 
 ## Installation
 
-The recommended way to install shell-piper is through [pipx](https://github.com/pypa/pipx): `pipx install shell-piper`
+The recommended way to install shell-piper is through [pipx](https://github.com/pypa/pipx)
+(`pipx install shell-piper`). Arch users can also install shell-piper from [the AUR](https://aur.archlinux.org/packages/shell-piper).
 
-You can also clone this repository and build shell-piper manually.
+You can also clone this repository and build shell-piper manually:
+
+```bash
+git clone 'https://github.com/Mrfiregem/shell-piper.git'
+cd shell-piper
+flit install
+```
 
 ## Quickstart
 
@@ -26,7 +34,9 @@ Convert pasted html into markdown with `pandoc`:
 shellpiper --type argument -- pandoc '{piper:file}' --from html -o converted.md
 ```
 
-The argument `{piper:file}` will be expanded by shell-piper to the full path of the temporary file. If this argument is not present, the file path will be appended as the last argument.
+The argument `{piper:file}` will be expanded by shell-piper to the full path of
+the temporary file. If this argument is not present, the file path will be appended
+as the last argument.
 
 ### Expand Mode
 
@@ -38,7 +48,7 @@ shellpiper -t x youtube-dl
 
 ## Usage
 
-```
+```text
 usage: shellpiper [-h] [-v] [-V] [-t TYPE] [-k] program [args ...]
 
 Write a temporary file and pass it to a program
