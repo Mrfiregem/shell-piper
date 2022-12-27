@@ -15,8 +15,8 @@ EPILOG = """\
 Use '--' to prevent command flags to the right of it being parsed by piper.
 
 The '--type' flag can take values 'stdin' (default), 'argument', or 'expand',
-or the letters 's', 'a', or 'x', respectively.
-This determines how the file is passed to your program by shellpiper.
+or the letters 's', 'a', or 'x', respectively. This determines how the file is
+passed to your program by shellpiper.
 """
 
 LOG_NAME = "shell_piper" if __name__ == "__main__" else __name__
