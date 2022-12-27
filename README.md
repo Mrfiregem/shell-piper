@@ -67,6 +67,6 @@ options:
 Use '--' to prevent command flags to the right of it being parsed by piper.
 
 The '--type' flag can take values 'stdin' (default), 'argument', or 'expand',
-or the letters 's', 'a', or 'x', respectively.
-This determines how the file is passed to your program by shellpiper.
+or the letters 's', 'a', or 'x', respectively. This determines how the file is
+passed to your program by shellpiper.
 ```
