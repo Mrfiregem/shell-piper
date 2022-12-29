@@ -5,11 +5,13 @@ import subprocess
 import sys
 from typing import IO
 
+from rich.logging import RichHandler
+
 from .exe import get_fullpath, replace_tmpfile_references
 from .file import (close_file_and_exit, close_tmpfile, create_tmpfile,
                    open_file_in_editor)
 
-__version__ = "0.6.0"
+__version__ = "0.7.0"
 
 EPILOG = """\
 Use '--' to prevent command flags to the right of it being parsed by piper.
@@ -19,23 +21,23 @@ or the letters 's', 'a', or 'x', respectively. This determines how the file is
 passed to your program by shellpiper.
 """
 
-LOG_NAME = "shell_piper" if __name__ == "__main__" else __name__
-root_log = logging.Logger(LOG_NAME)
+logging.basicConfig(handlers=[RichHandler()], level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 
 def stdin_mode(cmdline: list[str], file: IO[bytes]) -> int:
     """Run 'cmdline', passing 'file' as it's stdin"""
     try:
-        logging.debug("Starting command %s", cmdline)
+        logger.debug("Starting command %s", cmdline)
         proc = subprocess.run(cmdline, stdin=file, check=True)
     except subprocess.CalledProcessError as exc:
-        logging.error(
+        logger.error(
             "Failed to run command: %s exited with exit code %d",
             cmdline,
             exc.returncode,
         )
         close_file_and_exit(file, 2)
-    logging.debug("Finished running command %s", cmdline)
+    logger.debug("Finished running command %s", cmdline)
     return proc.returncode
 
 
@@ -47,16 +49,16 @@ def argument_mode(cmdline: list[str], file: IO[bytes]) -> int:
         cmdline = cmdline + [file.name]
 
     try:
-        logging.debug("Starting command %s", cmdline)
+        logger.debug("Starting command %s", cmdline)
         proc = subprocess.run(cmdline, check=True)
     except subprocess.CalledProcessError as exc:
-        logging.error(
+        logger.error(
             "Failed to run command: %s exited with exit code %d",
             cmdline,
             exc.returncode,
         )
         close_file_and_exit(file, 2)
-    logging.debug("Finished running command %s", cmdline)
+    logger.debug("Finished running command %s", cmdline)
     return proc.returncode
 
 
@@ -67,16 +69,16 @@ def expand_mode(cmdline: list[str], file: IO[bytes], keep_empty: bool) -> int:
         expansion = list(filter(None, expansion))
     try:
         cmdline = cmdline + expansion
-        logging.debug("Starting command %s", cmdline)
+        logger.debug("Starting command %s", cmdline)
         proc = subprocess.run(cmdline, check=True)
     except subprocess.CalledProcessError as exc:
-        logging.error(
+        logger.error(
             "Failed to run command: %s exited with exit code %d",
             cmdline,
             exc.returncode,
         )
         close_file_and_exit(file, 2)
-    logging.debug("Finished running command %s", cmdline)
+    logger.debug("Finished running command %s", cmdline)
     return proc.returncode
 
 
@@ -121,35 +123,36 @@ def main():
     cmdline = [cli_args.program] + cli_args.prog_args
 
     # Show more output if '-V' was passed
-    if cli_args.verbose:
-        logging.basicConfig(level=logging.DEBUG)
+    if not cli_args.verbose:
+        # TODO: Change log level
+        logging.disable(logging.INFO)
 
     # Create a temporary file and open it in user's editor
     file_obj = create_tmpfile()
     open_file_in_editor(file_obj)
 
     try:
-        logging.debug("Attempting to find executable: %s", cli_args.program)
+        logger.debug("Attempting to find executable: %s", cli_args.program)
         executable = get_fullpath(cli_args.program)
     except FileNotFoundError:
-        logging.error("Cannot find full path for %s", cli_args.program)
+        logger.error("Cannot find full path for %s", cli_args.program)
         close_file_and_exit(file_obj, 4)
 
-    logging.debug("Found executable: %s", executable)
+    logger.debug("Found executable: %s", executable)
 
-    logging.debug("Beginning mode check")
+    logger.debug("Beginning mode check")
     # Run the given program on the temporary file
     if cli_args.type in ["stdin", "s"]:
-        logging.debug("Starting stdin_mode()")
+        logger.debug("Starting stdin_mode()")
         stdin_mode(cmdline, file_obj)
     elif cli_args.type in ["argument", "a"]:
-        logging.debug("Starting argument_mode()")
+        logger.debug("Starting argument_mode()")
         argument_mode(cmdline, file_obj)
     elif cli_args.type in ["expand", "x"]:
-        logging.debug("Starting expand_mode()")
+        logger.debug("Starting expand_mode()")
         expand_mode(cmdline, file_obj, cli_args.keep_empty)
     else:
-        logging.error("Unknown '--type' value. Something went wrong.")
+        logger.error("Unknown '--type' value. Something went wrong.")
         close_file_and_exit(file_obj, 3)
 
     # Delete the temporary file

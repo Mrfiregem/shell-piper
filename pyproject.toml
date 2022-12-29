@@ -6,6 +6,7 @@ build-backend = "flit_core.buildapi"
 name = "shell-piper"
 authors = [{ name = "Firegem", email = "mrfiregem@protonmail.ch" }]
 license = { file = "LICENSE" }
+dynamic = ["version", "description"]
 readme = "README.md"
 classifiers = [
   "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
@@ -13,7 +14,7 @@ classifiers = [
   "Programming Language :: Python",
   "Programming Language :: Python :: 3.9",
 ]
-dynamic = ["version", "description"]
+dependencies = ["rich>=12.6.0"]
 
 [project.urls]
 Home = "https://github.com/Mrfiregem/shell-piper"
@@ -23,4 +24,10 @@ Issues = "https://github.com/Mrfiregem/shell-piper/issues"
 shellpiper = "shell_piper:main"
 
 [project.optional-dependencies]
-dev = ["black>=22.12", "flit", "mypy>=0.991", "setuptools>=63.2"]
+dev = [
+  "black>=22.12",
+  "flit",
+  "mypy>=0.991",
+  "setuptools>=63.2",
+  "pylint>=2.15.9",
+]
