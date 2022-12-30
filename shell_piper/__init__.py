@@ -11,7 +11,7 @@ from .exe import get_fullpath, replace_tmpfile_references
 from .file import (close_file_and_exit, close_tmpfile, create_tmpfile,
                    open_file_in_editor)
 
-__version__ = "0.7.0"
+__version__ = "0.7.1"
 
 EPILOG = """\
 Use '--' to prevent command flags to the right of it being parsed by piper.
@@ -21,8 +21,9 @@ or the letters 's', 'a', or 'x', respectively. This determines how the file is
 passed to your program by shellpiper.
 """
 
-logging.basicConfig(handlers=[RichHandler()], level=logging.DEBUG)
+logging.basicConfig(handlers=[RichHandler(markup=True)])
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.WARNING)
 
 
 def stdin_mode(cmdline: list[str], file: IO[bytes]) -> int:
@@ -123,9 +124,8 @@ def main():
     cmdline = [cli_args.program] + cli_args.prog_args
 
     # Show more output if '-V' was passed
-    if not cli_args.verbose:
-        # TODO: Change log level
-        logging.disable(logging.INFO)
+    if cli_args.verbose:
+        logger.setLevel(logging.DEBUG)
 
     # Create a temporary file and open it in user's editor
     file_obj = create_tmpfile()
