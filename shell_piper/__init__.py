@@ -5,13 +5,15 @@ import subprocess
 import sys
 from typing import IO
 
-from rich.logging import RichHandler
-
 from .exe import get_fullpath, replace_tmpfile_references
-from .file import (close_file_and_exit, close_tmpfile, create_tmpfile,
-                   open_file_in_editor)
+from .file import (
+    close_file_and_exit,
+    close_tmpfile,
+    create_tmpfile,
+    open_file_in_editor,
+)
 
-__version__ = "0.7.1"
+__version__ = "0.7.2"
 
 EPILOG = """\
 Use '--' to prevent command flags to the right of it being parsed by piper.
@@ -21,7 +23,14 @@ or the letters 's', 'a', or 'x', respectively. This determines how the file is
 passed to your program by shellpiper.
 """
 
-logging.basicConfig(handlers=[RichHandler(markup=True)])
+
+try:
+    from rich.logging import RichHandler
+except ImportError:
+    logging.basicConfig()
+else:
+    logging.basicConfig(handlers=[RichHandler(markup=True)])
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.WARNING)
 
@@ -65,7 +74,9 @@ def argument_mode(cmdline: list[str], file: IO[bytes]) -> int:
 
 def expand_mode(cmdline: list[str], file: IO[bytes], keep_empty: bool) -> int:
     """Run 'cmdline', passing each line of 'file' as an argument"""
-    expansion = [line.decode(encoding="utf8").strip() for line in file.readlines()]
+    expansion: list[str] = [
+        line.decode(encoding="utf8").strip() for line in file.readlines()
+    ]
     if not keep_empty:
         expansion = list(filter(None, expansion))
     try:
@@ -83,7 +94,7 @@ def expand_mode(cmdline: list[str], file: IO[bytes], keep_empty: bool) -> int:
     return proc.returncode
 
 
-def main():
+def main() -> None:
     """Entrance to cli script"""
     ap = argparse.ArgumentParser(  # pylint: disable=invalid-name
         prog="shellpiper",
@@ -121,7 +132,7 @@ def main():
 
     cli_args = ap.parse_args()
 
-    cmdline = [cli_args.program] + cli_args.prog_args
+    cmdline: list[str] = [cli_args.program] + cli_args.prog_args
 
     # Show more output if '-V' was passed
     if cli_args.verbose:

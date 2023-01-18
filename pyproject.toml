@@ -15,7 +15,6 @@ classifiers = [
   "Programming Language :: Python :: 3.9",
 ]
 requires-python = ">=3.9"
-dependencies = ["rich>=12.6.0"]
 
 [project.urls]
 Home = "https://github.com/Mrfiregem/shell-piper"
@@ -25,6 +24,7 @@ Issues = "https://github.com/Mrfiregem/shell-piper/issues"
 shellpiper = "shell_piper:main"
 
 [project.optional-dependencies]
+richdebug = ["rich>=12.6.0"]
 dev = [
   "black>=22.12",
   "flit",
